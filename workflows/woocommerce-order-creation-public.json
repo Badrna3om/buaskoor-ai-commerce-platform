@@ -1,0 +1,405 @@
+{
+  "name": "WooCommerce Order Creation - Public",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        272,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================\n// PRODUCT IDS\n// =====================================\n\nconst PRODUCT_IDS = {\n  \"زيت سمسم سوداني فاخر|500ml\": 6171,\n  \"كركديه سوداني فاخر|250g\": 6172,\n\n  \"قهوة بوعسكور العربية السوداء|250g\": 3681,\n  \"قهوة بوعسكور العربية السوداء|500g\": 3681,\n  \"قهوة بوعسكور العربية السوداء|1kg\": 3681,\n\n  \"قهوة بوعسكور العربية البنية|250g\": 3682,\n  \"قهوة بوعسكور العربية البنية|500g\": 3682,\n  \"قهوة بوعسكور العربية البنية|1kg\": 3682,\n\n  \"قهوة بوعسكور العربية الشقراء|250g\": 5927,\n  \"قهوة بوعسكور العربية الشقراء|500g\": 5927,\n  \"قهوة بوعسكور العربية الشقراء|1kg\": 5927,\n\n  \"شاي تعليقة|عبوة\": 3680,\n  \"شاي تعليقة بلس|عبوة\": 3679,\n  \"شاي تلقيمة أصيل|عبوة\": 3678,\n  \"شاي تلقيمة سبيشل OP1|عبوة\": 3677,\n  \"شاي عراقي نخب أول|عبوة\": 3674\n};\n\n// =====================================\n// VARIATION IDS\n// =====================================\n\nconst VARIATION_IDS = {\n  \"قهوة بوعسكور العربية السوداء|250g\": 6275,\n  \"قهوة بوعسكور العربية السوداء|500g\": 6276,\n  \"قهوة بوعسكور العربية السوداء|1kg\": 6277,\n\n  \"قهوة بوعسكور العربية الشقراء|250g\": 6281,\n  \"قهوة بوعسكور العربية الشقراء|500g\": 6282,\n  \"قهوة بوعسكور العربية الشقراء|1kg\": 6283,\n\n  \"قهوة بوعسكور العربية البنية|250g\": 6286,\n  \"قهوة بوعسكور العربية البنية|500g\": 6287,\n  \"قهوة بوعسكور العربية البنية|1kg\": 6288,\n\n  \"زيت سمسم سوداني فاخر|500ml\": 6334\n};\n\n// =====================================\n// INPUTS\n// =====================================\n\nconst customer_name = $json.customer_name || '';\nconst phone = $json.phone || '';\nconst address = $json.address || '';\nconst area = $json.area || '';\nconst payment_method = $json.payment_method || 'الدفع عند الاستلام';\n\nlet cart = [];\n\ntry {\n  cart = JSON.parse($json.cart || '[]');\n} catch {\n  cart = [];\n}\n\n// =====================================\n// SHIPPING\n// =====================================\n\nconst specialAreas = [\n  'القوع',\n  'الوجن',\n  'الوقن',\n  'الظفرة',\n  'المنطقة الغربية',\n  'الرويس',\n  'غياثي',\n  'ليوا',\n  'المرفأ'\n];\n\nconst shippingCost =\n  specialAreas.some(a => address.includes(a) || area.includes(a))\n    ? 35\n    : 18;\n\n// =====================================\n// LINE ITEMS\n// =====================================\n\nconst line_items = [];\n\nfor (const item of cart) {\n\n  const key = `${item.product}|${item.weight}`;\n\n  const product_id = PRODUCT_IDS[key];\n\n  if (!product_id) {\n    continue;\n  }\n\n  const line = {\n    product_id,\n    quantity: Number(item.quantity || 1)\n  };\n\n  const variation_id = VARIATION_IDS[key];\n\n  if (variation_id) {\n    line.variation_id = variation_id;\n  }\n\n  line_items.push(line);\n}\n\n// =====================================\n// VALIDATION\n// =====================================\n\nif (!line_items.length) {\n  throw new Error('No valid products found');\n}\n\n// =====================================\n// WOO ORDER PAYLOAD\n// =====================================\n\nconst order_payload = {\n  payment_method: 'cod',\n  payment_method_title: 'الدفع عند الاستلام',\n  set_paid: false,\n  status: 'processing',\n\n  billing: {\n    first_name: customer_name,\n    phone: phone,\n    address_1: address,\n    country: 'AE'\n  },\n\n  shipping: {\n    first_name: customer_name,\n    address_1: address,\n    country: 'AE'\n  },\n\n  line_items,\n\n  shipping_lines: [\n    {\n      method_id: 'flat_rate',\n      method_title: 'توصيل',\n      total: String(shippingCost)\n    }\n  ],\n\n  customer_note: 'WhatsApp Order'\n};\n\n// =====================================\n// OUTPUT\n// =====================================\n\nreturn [{\n  json: {\n    ...$json,\n    shipping_cost: shippingCost,\n    order_payload\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        352
+      ],
+      "name": "Build WooCommerce Payload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://YOUR_STORE_DOMAIN/wp-json/wc/v3/orders",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify($json.order_payload) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        672,
+        352
+      ],
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "n8n bu",
+        "remoteJid": "={{ $json.phone }}",
+        "messageText": "={{\n`شكراً جزيلاً 🤎\n\nتم استلام طلبكم بنجاح.\n\nرقم الطلب: #${$json.woo_order_id}\n\nإجمالي الطلب: ${$json.grand_total} درهم\n\nسيتم التواصل معكم قريباً من شركة الشحن لتأكيد موعد التوصيل 🌿\n\nوتشرفنا بخدمتكم.`\n}}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        352
+      ],
+      "name": "Enviar texto"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "YOUR_DATA_TABLE_ID",
+          "mode": "list",
+          "cachedResultName": "chat_sessions"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "phone",
+              "keyValue": "={{ $('Build WooCommerce Payload').item.json.phone }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_created": "={{ true }}",
+            "woo_order_id": "={{$json.id}}",
+            "woo_order_status": "={{$json.status}}",
+            "state": "browsing",
+            "last_order_date": "={{ $now }}",
+            "cart": "={{ \"[]\" }}",
+            "selected_category": "={{ \"\" }}",
+            "selected_product": "={{ \"\" }}",
+            "selected_weight": "={{ \"\" }}",
+            "quantity": "={{ \"\" }}",
+            "order_summary": "={{ \"\" }}",
+            "last_bot_message": "={{\n`شكراً جزيلاً 🤎\n\nتم استلام طلبكم بنجاح.\n\nرقم الطلب: #${$json.woo_order_id}\n\nإجمالي الطلب: ${$json.grand_total} درهم\n\nسيتم التواصل معكم قريباً من شركة الشحن لتأكيد موعد التوصيل 🌿\n\nوتشرفنا بخدمتكم.`\n}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "area",
+              "displayName": "area",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "selected_category",
+              "displayName": "selected_category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "selected_product",
+              "displayName": "selected_product",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "selected_weight",
+              "displayName": "selected_weight",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "quantity",
+              "displayName": "quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "payment_method",
+              "displayName": "payment_method",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "order_summary",
+              "displayName": "order_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_user_message",
+              "displayName": "last_user_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_bot_message",
+              "displayName": "last_bot_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_order_date",
+              "displayName": "last_order_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "history",
+              "displayName": "history",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "catalog_sent",
+              "displayName": "catalog_sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "cart",
+              "displayName": "cart",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_message_id",
+              "displayName": "last_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_message_time",
+              "displayName": "last_message_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "order_created",
+              "displayName": "order_created",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "woo_order_id",
+              "displayName": "woo_order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "woo_order_status",
+              "displayName": "woo_order_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        352
+      ],
+      "name": "Update row(s)"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Build WooCommerce Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build WooCommerce Payload": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row(s)": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  }
+}

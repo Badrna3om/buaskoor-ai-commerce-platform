@@ -1,0 +1,140 @@
+{
+  "name": "WooCommerce Order Notification - Public",
+  "nodes": [
+    {
+      "parameters": {
+        "event": "order.created"
+      },
+      "type": "n8n-nodes-base.wooCommerceTrigger",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -128
+      ],
+      "name": "WooCommerce Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "order",
+        "operation": "get",
+        "orderId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -128
+      ],
+      "name": "Get an order"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ======================================================\n// WooCommerce Order → Telegram Operations Notification\n// الهدف:\n// تحويل بيانات طلب WooCommerce إلى رسالة واضحة ومنظمة\n// ترسل إلى فريق العمليات / التوصيل عبر Telegram\n// ======================================================\n// ======================================================\n// 1) Read WooCommerce Order Data\n// قراءة بيانات الطلب القادمة من WooCommerce\n// ======================================================\n\nconst o = $json;\n\n\n// ======================================================\n// 2) Helper Functions\n// أدوات تنظيف وحماية من القيم الفارغة\n// ======================================================\n\n// تنظيف أي قيمة وتحويلها إلى نص\nconst clean = (v) => (v ?? \"\").toString().trim();\n\n// إرجاع قيمة آمنة أو fallback إذا كانت فارغة\nconst safe = (v, fallback = \"-\") => {\n  const x = clean(v);\n  return x.length ? x : fallback;\n};\n\n\n// ======================================================\n// 3) Customer Information\n// استخراج بيانات العميل\n// ======================================================\n\nconst fullName = `${clean(o.billing?.first_name)} ${clean(o.billing?.last_name)}`.trim();\n\nconst customerName = safe(fullName);\nconst phone = safe(o.billing?.phone);\n\n\n// ======================================================\n// 4) Payment Method\n// استخراج طريقة الدفع\n// ======================================================\n\nconst paymentMethod = safe(\n  o.payment_method_title || o.payment_method\n).replace(/&amp;/g, \"&\");\n\n\n// ======================================================\n// 5) Address Selection\n// اختيار عنوان الفوترة إذا كان متوفرًا\n// وإذا لم يكن متوفرًا نستخدم عنوان الشحن\n// ======================================================\n\nconst addrObj =\n  o.billing && (o.billing.address_1 || o.billing.city || o.billing.country)\n    ? o.billing\n    : o.shipping || {};\n\n\n// ======================================================\n// 6) Address Formatting\n// تنسيق العنوان في شكل واضح للعمليات والتوصيل\n// ======================================================\n\nconst addressParts = [\n  addrObj?.address_1,\n  addrObj?.address_2,\n  addrObj?.city,\n  addrObj?.state,\n  addrObj?.postcode,\n  addrObj?.country,\n]\n  .map(clean)\n  .filter(Boolean);\n\nconst address = addressParts.length ? addressParts.join(\"، \") : \"-\";\n\n\n// ======================================================\n// 7) Customer Note\n// ملاحظة العميل إن وجدت\n// ======================================================\n\nconst note = safe(o.customer_note);\n\n\n// ======================================================\n// 8) Order Items Formatting\n// تحويل المنتجات داخل الطلب إلى قائمة واضحة\n// ======================================================\n\nconst items = Array.isArray(o.line_items) ? o.line_items : [];\n\nconst itemsText = items.length\n  ? items\n      .map((item, index) => {\n        const itemName = safe(item.name);\n        const quantity = safe(item.quantity, \"1\");\n\n        return `${index + 1}) ${itemName} × ${quantity}`;\n      })\n      .join(\"\\n\")\n  : \"-\";\n\n\n// ======================================================\n// 9) Currency & Total Amount\n// استخراج العملة والإجمالي النهائي\n// ======================================================\n\nconst currency = clean(o.currency);\nconst total = safe(o.total);\n\nconst totalText = currency ? `${total} ${currency}` : total;\n\n\n// ======================================================\n// 10) Shipping Amount\n// استخراج مبلغ التوصيل\n// ======================================================\n\nconst shippingTotal = clean(\n  o.shipping_total || o.shipping_lines?.[0]?.total || \"0\"\n);\n\nconst shippingText = currency\n  ? `${shippingTotal} ${currency}`\n  : shippingTotal;\n\n\n// ======================================================\n// 11) Shipping Method\n// استخراج اسم طريقة التوصيل\n// ======================================================\n\nconst shippingMethod =\n  Array.isArray(o.shipping_lines) && o.shipping_lines.length\n    ? safe(\n        o.shipping_lines\n          .map((shipping) => shipping.method_title)\n          .filter(Boolean)\n          .join(\" + \")\n      )\n    : \"-\";\n\n\n// ======================================================\n// 12) Order Reference\n// رقم الطلب ومعرف الطلب\n// ======================================================\n\nconst orderNo = safe(o.number || o.id);\nconst orderId = o.id;\n\n\n// ======================================================\n// 13) Telegram Message Builder\n// بناء رسالة منظمة وواضحة لفريق العمليات\n// ======================================================\n\nconst msg = `🧾 طلب جديد رقم: ${orderNo}\n\n👤 الاسم: ${customerName}\n📞 الجوال: ${phone}\n\n🛒 المنتجات:\n${itemsText}\n\n💳 طريقة الدفع: ${paymentMethod}\n🚚 طريقة التوصيل: ${shippingMethod}\n💰 مبلغ التوصيل: ${shippingText}\n💵 الإجمالي الكلي: ${totalText}\n\n📍 العنوان:\n${address}\n\n📝 ملاحظة العميل:\n${note}`;\n\n\n// ======================================================\n// 14) Final Output\n// إرسال النص النهائي إلى Telegram Node\n// مع order_id لاستخدامه في أزرار الحالة أو التحديثات\n// ======================================================\n\nreturn [\n  {\n    json: {\n      order_id: orderId,\n      text: msg,\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -16,
+        -128
+      ],
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "={{$json.text}}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ تم",
+                    "additionalFields": {
+                      "callback_data": "=st:completed:{{$json.order_id}}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "⏸ تعليق",
+                    "additionalFields": {
+                      "callback_data": "=st:on-hold:{{$json.order_id}}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "❌ الغاء",
+                    "additionalFields": {
+                      "callback_data": "=st:cancelled:{{$json.order_id}}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        -128
+      ],
+      "name": "Send a text message",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    }
+  ],
+  "connections": {
+    "WooCommerce Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get an order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an order": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  }
+}

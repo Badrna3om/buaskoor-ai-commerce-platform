@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="700">
+<rect width="1400" height="700" fill="#f8f5ef"/>
+<style>.t{font-family:Arial;fill:#171717}.h{font-size:32px;font-weight:700}.s{font-size:18px;font-weight:700}.b{fill:#fff;stroke:#7a4f2a;stroke-width:2;rx:18}.a{stroke:#171717;stroke-width:3;fill:none;marker-end:url(#m)}</style>
+<defs><marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#171717"/></marker></defs>
+<text x="700" y="50" text-anchor="middle" class="t h">Buaskoor AI Commerce Platform</text>
+<rect x="60" y="130" width="220" height="100" class="b"/><text x="170" y="185" text-anchor="middle" class="t s">Customer</text>
+<rect x="340" y="130" width="220" height="100" class="b"/><text x="450" y="185" text-anchor="middle" class="t s">WhatsApp / Storefront</text>
+<rect x="620" y="130" width="220" height="100" class="b"/><text x="730" y="185" text-anchor="middle" class="t s">n8n Orchestration</text>
+<rect x="900" y="130" width="220" height="100" class="b"/><text x="1010" y="185" text-anchor="middle" class="t s">OpenAI Sales Agent</text>
+<path d="M280 180 H340" class="a"/><path d="M560 180 H620" class="a"/><path d="M840 180 H900" class="a"/>
+<rect x="420" y="360" width="250" height="110" class="b"/><text x="545" y="420" text-anchor="middle" class="t s">Session Data</text>
+<rect x="760" y="360" width="250" height="110" class="b"/><text x="885" y="420" text-anchor="middle" class="t s">WooCommerce</text>
+<path d="M730 230 V310 H545 V360" class="a"/><path d="M730 230 V310 H885 V360" class="a"/>
+<rect x="500" y="550" width="220" height="100" class="b"/><text x="610" y="605" text-anchor="middle" class="t s">Customer Confirmation</text>
+<rect x="790" y="550" width="220" height="100" class="b"/><text x="900" y="605" text-anchor="middle" class="t s">Telegram Operations</text>
+<path d="M885 470 V510 H610 V550" class="a"/><path d="M885 470 V510 H900 V550" class="a"/>
+</svg>

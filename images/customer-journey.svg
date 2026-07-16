@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="360">
+<rect width="1500" height="360" fill="#f8f5ef"/>
+<style>.t{font-family:Arial;fill:#171717}.h{font-size:30px;font-weight:700}.s{font-size:16px;font-weight:700}.b{fill:#fff;stroke:#7a4f2a;stroke-width:2;rx:18}.a{stroke:#171717;stroke-width:3;fill:none;marker-end:url(#m)}</style>
+<defs><marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#171717"/></marker></defs>
+<text x="750" y="50" text-anchor="middle" class="t h">Customer Journey</text>
+<rect x="30" y="140" width="160" height="85" class="b"/><text x="110" y="190" text-anchor="middle" class="t s">Browse Menu</text>
+<rect x="220" y="140" width="160" height="85" class="b"/><text x="300" y="190" text-anchor="middle" class="t s">WhatsApp Chat</text>
+<rect x="410" y="140" width="160" height="85" class="b"/><text x="490" y="190" text-anchor="middle" class="t s">AI Guidance</text>
+<rect x="600" y="140" width="160" height="85" class="b"/><text x="680" y="190" text-anchor="middle" class="t s">Build Cart</text>
+<rect x="790" y="140" width="160" height="85" class="b"/><text x="870" y="190" text-anchor="middle" class="t s">Collect Details</text>
+<rect x="980" y="140" width="160" height="85" class="b"/><text x="1060" y="190" text-anchor="middle" class="t s">Confirm Order</text>
+<rect x="1170" y="140" width="160" height="85" class="b"/><text x="1250" y="180" text-anchor="middle" class="t s">WooCommerce</text><text x="1250" y="202" text-anchor="middle" class="t s">Order</text>
+<rect x="1360" y="140" width="110" height="85" class="b"/><text x="1415" y="180" text-anchor="middle" class="t s">Notify</text><text x="1415" y="202" text-anchor="middle" class="t s">Ops</text>
+<path d="M190 182 H220" class="a"/><path d="M380 182 H410" class="a"/><path d="M570 182 H600" class="a"/><path d="M760 182 H790" class="a"/><path d="M950 182 H980" class="a"/><path d="M1140 182 H1170" class="a"/><path d="M1330 182 H1360" class="a"/>
+</svg>

@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>متجر بوعسكور | منيو تفاعلي</title>
+  <style>
+    :root{
+      --black:#0f0d0a;
+      --gold:#c9953d;
+      --brown:#8a5a2b;
+      --cream:#f7f0e6;
+      --card:#fffaf2;
+      --red:#b61515;
+      --green:#236b38;
+      --line:#ddc9ae;
+      --muted:#6b6258;
+      --shadow:0 16px 40px rgba(40,24,8,.14);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Tahoma, Arial, sans-serif;
+      color:var(--black);
+      background:
+        linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.82)),
+        repeating-linear-gradient(90deg, transparent 0 76px, rgba(0,0,0,.045) 77px 79px),
+        repeating-linear-gradient(0deg, transparent 0 76px, rgba(0,0,0,.045) 77px 79px),
+        var(--cream);
+      padding-bottom:120px;
+    }
+    header{
+      background:
+        radial-gradient(circle at left, rgba(201,149,61,.28), transparent 30%),
+        linear-gradient(135deg,#0c0a07,#1f160c 62%,#0c0a07);
+      color:white;
+      padding:30px 16px;
+      text-align:center;
+      border-bottom:5px solid var(--gold);
+    }
+    .logo{
+      display:inline-flex;
+      width:88px;height:88px;
+      border:2px solid var(--gold);
+      border-radius:18px;
+      align-items:center;justify-content:center;
+      flex-direction:column;
+      margin-bottom:14px;
+      color:var(--gold);
+      font-weight:900;
+      box-shadow:0 0 30px rgba(201,149,61,.25);
+    }
+    .logo .cup{font-size:28px}
+    h1{
+      margin:0;
+      font-size:clamp(36px,7vw,70px);
+      font-weight:900;
+      letter-spacing:-1px;
+    }
+    .tagline{margin-top:10px;color:#e9d5b5;font-size:18px}
+    .features{
+      max-width:1000px;margin:22px auto 0;
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+      color:#f7ead2;font-size:13px;
+    }
+    .feature{border:1px solid rgba(201,149,61,.45);border-radius:999px;padding:9px 10px;background:rgba(255,255,255,.06)}
+    .wrap{max-width:1200px;margin:auto;padding:24px 14px}
+    .section-title{display:flex;align-items:center;gap:12px;margin:34px 0 16px;text-align:center}
+    .section-title h2{margin:0;font-size:32px;color:var(--black);white-space:nowrap}
+    .section-title:before,.section-title:after{content:"";height:2px;background:var(--line);flex:1}
+    .grid{display:grid;grid-template-columns:1fr;gap:18px}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+    }
+    .imagebox{
+      height:240px;
+      background:linear-gradient(135deg,#efe0cc,#fff7ec);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .imagebox img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:.2s;
+    }
+    .card:hover .imagebox img{transform:scale(1.03)}
+    .badge{
+      position:absolute;
+      top:12px;
+      right:12px;
+      color:white;
+      background:#111;
+      padding:8px 14px;
+      border-radius:10px;
+      font-weight:900;
+      font-size:14px;
+    }
+    .coffee-black .badge{background:#111}
+    .coffee-brown .badge{background:#8a5a2b}
+    .coffee-blonde .badge{background:#d19a43;color:#111}
+    .batrina-red .badge{background:#9c1111}
+    .batrina-green .badge{background:#5d7d16}
+    .tea .badge{background:#143d23}
+    .body{padding:16px}
+    .body h3{font-size:22px;margin:0 0 8px;line-height:1.35}
+    .desc{font-size:14px;color:#342d25;line-height:1.8;margin-bottom:14px}
+    .variant{
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      border:1px solid var(--line);
+      background:white;
+      border-radius:14px;
+      margin-top:8px;
+    }
+    .variant strong{font-size:15px}
+    .price{font-weight:900;color:var(--red)}
+    .qty{display:flex;align-items:center;gap:9px}
+    .qty button{
+      width:30px;height:30px;border:0;border-radius:50%;
+      background:var(--black);color:white;font-size:18px;font-weight:900;cursor:pointer;
+    }
+    .qty span{min-width:18px;text-align:center;font-weight:900}
+    .order-panel{
+      margin-top:30px;
+      background:#fff;
+      border:2px solid var(--green);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      display:grid;
+      grid-template-columns:1fr;
+      gap:20px;
+    }
+    .cart h2,.details h2{margin:0 0 12px;color:var(--green)}
+    .cart-row{
+      display:grid;grid-template-columns:1fr auto auto;gap:10px;
+      align-items:center;
+      border-bottom:1px solid var(--line);
+      padding:11px 0;
+      font-size:14px;
+    }
+    .cart-row .remove{border:0;background:transparent;font-size:20px;cursor:pointer}
+    .empty{color:var(--muted);padding:12px 0}
+    .field{margin:11px 0}
+    .field label{display:block;font-weight:900;margin-bottom:6px}
+    .field input,.field textarea{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:13px;
+      background:#fffaf2;
+      font-size:15px;
+      outline:none;
+    }
+    .req{color:var(--red)}
+    .total{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:22px;
+      font-weight:900;
+      margin-top:12px;
+    }
+    .cta{
+      width:100%;
+      border:0;
+      border-radius:14px;
+      background:#159947;
+      color:white;
+      font-size:18px;
+      font-weight:900;
+      padding:16px;
+      cursor:pointer;
+      margin-top:12px;
+    }
+    .cta:disabled{background:#aaa;cursor:not-allowed}
+    .error{
+      display:none;
+      background:#ffe4e4;
+      color:#8a0000;
+      border:1px solid #ffbaba;
+      padding:10px;
+      border-radius:12px;
+      margin-top:10px;
+      font-size:14px;
+      line-height:1.7;
+    }
+    .floating{
+      position:fixed;
+      bottom:12px;
+      left:12px;
+      right:12px;
+      background:#111;
+      color:white;
+      z-index:80;
+      border-radius:18px;
+      padding:13px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 14px 42px rgba(0,0,0,.28);
+      font-weight:900;
+    }
+    .floating button{
+      border:0;background:#159947;color:white;border-radius:999px;
+      padding:11px 16px;font-weight:900;cursor:pointer;
+    }
+    footer{
+      text-align:center;
+      background:#111;
+      color:#eee;
+      padding:18px;
+      margin-top:20px;
+    }
+    @media(min-width:760px){
+      body{padding-bottom:0}
+      .features{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .order-panel{grid-template-columns:1fr 1fr}
+      .floating{display:none}
+    }
+    @media(min-width:1080px){
+      .grid.coffee{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .grid.tea{grid-template-columns:repeat(5,minmax(0,1fr))}
+      .grid.batrina{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="cup">☕</div><div>BUASKOOR</div></div>
+  <h1>متجر بوعسكور</h1>
+  <div class="tagline">منتجاتنا الأصلية بطعم لا يُنسى</div>
+  <div class="features">
+    <div class="feature">🌿 منتجات طبيعية</div>
+    <div class="feature">🏅 جودة عالية</div>
+    <div class="feature">🚚 توصيل داخل الإمارات</div>
+    <div class="feature">💳 دفع عند الاستلام</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section>
+    <div class="section-title"><h2>قهوة بوعسكور العربية</h2></div>
+    <div class="grid coffee" id="coffee"></div>
+  </section>
+
+  <section>
+    <div class="section-title"><h2>بترينا</h2></div>
+    <div class="grid batrina" id="batrina"></div>
+  </section>
+
+  <section>
+    <div class="section-title"><h2>عالم الشاي</h2></div>
+    <div class="grid tea" id="tea"></div>
+  </section>
+
+  <section class="order-panel" id="orderPanel">
+    <div class="cart">
+      <h2>🛒 سلة الطلب</h2>
+      <div id="cartItems"></div>
+      <div class="total"><span>الإجمالي</span><span id="total">0 درهم</span></div>
+    </div>
+
+    <div class="details">
+      <h2>📝 تفاصيل الطلب</h2>
+      <div class="field">
+        <label>الاسم الكامل <span class="req">*</span></label>
+        <input id="customerName" placeholder="اكتب اسمك الكامل">
+      </div>
+      <div class="field">
+        <label>العنوان بالتفصيل <span class="req">*</span></label>
+        <textarea id="customerAddress" rows="3" placeholder="الإمارة، المدينة، المنطقة، أقرب معلم"></textarea>
+      </div>
+      <div class="field">
+        <label>رقم الهاتف <span class="req">*</span></label>
+        <input id="customerPhone" placeholder="05X XXX XXXX">
+      </div>
+      <div class="field">
+        <label>ملاحظات اختيارية</label>
+        <textarea id="customerNotes" rows="2" placeholder="أي ملاحظات إضافية للطلب"></textarea>
+      </div>
+      <div class="error" id="errorBox"></div>
+      <button class="cta" id="orderBtn" onclick="proceedToWhatsApp()" disabled>إرسال الطلب عبر واتساب</button>
+    </div>
+  </section>
+</main>
+
+<div class="floating">
+  <span id="mobileTotal">0 درهم</span>
+  <button onclick="document.getElementById('orderPanel').scrollIntoView({behavior:'smooth'})">إتمام الطلب</button>
+</div>
+
+<footer>
+  www.buaskoor.ae — بالعافية عليكم ♡
+</footer>
+
+<script>
+const WHATSAPP_NUMBER = "971561911576";
+
+const products = [
+  {
+    id:"black_coffee", section:"coffee", cls:"coffee-black", badge:"السوداء",
+    name:"قهوة بوعسكور العربية السوداء",
+    desc:"تحميص داكن ونكهة قوية لعشاق القهوة الثقيلة. مطحونة وجاهزة، خلطة بوعسكور الخاصة.",
+    img:"https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&w=900&q=80",
+    variants:[["ربع كيلو",35],["نص كيلو",65],["كيلو",125]]
+  },
+  {
+    id:"brown_coffee", section:"coffee", cls:"coffee-brown", badge:"البنية",
+    name:"قهوة بوعسكور العربية البنية",
+    desc:"قهوة متوازنة بتحميص متوسط مناسبة للاستخدام اليومي. مطحونة وجاهزة، خلطة بوعسكور الخاصة.",
+    img:"https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=900&q=80",
+    variants:[["ربع كيلو",30],["نص كيلو",55],["كيلو",110]]
+  },
+  {
+    id:"blonde_coffee", section:"coffee", cls:"coffee-blonde", badge:"الشقراء",
+    name:"قهوة بوعسكور العربية الشقراء",
+    desc:"قهوة عربية خفيفة بتحميص فاتح ونكهة عربية أصيلة. مطحونة وجاهزة، خلطة بوعسكور الخاصة.",
+    img:"https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=900&q=80",
+    variants:[["ربع كيلو",40],["نص كيلو",75],["كيلو",140]]
+  },
+  {
+    id:"hibiscus", section:"batrina", cls:"batrina-red", badge:"كركديه فاخر",
+    name:"كركديه سوداني فاخر طبيعي 100%",
+    desc:"كركديه سوداني فاخر بجودة عالية ولون غني وطعم طبيعي منعش، مناسب للمشروبات الساخنة والباردة.",
+    img:"https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=900&q=80",
+    variants:[["عبوة",20]]
+  },
+  {
+    id:"sesame_oil", section:"batrina", cls:"batrina-green", badge:"زيت سمسم فاخر",
+    name:"زيت سمسم سوداني فاخر طبيعي 100%",
+    desc:"زيت سمسم سوداني فاخر معصور على البارد من أجود أنواع السمسم السوداني بنكهة طبيعية غنية.",
+    img:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=900&q=80",
+    variants:[["عبوة",30]]
+  },
+  {
+    id:"tea_black", section:"tea", cls:"tea", badge:"شاي",
+    name:"شاي تعليقة أسود",
+    desc:"شاي يومي متوازن بطعم غني ولون مميز مناسب لجميع الأوقات.",
+    img:"https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=900&q=80",
+    variants:[["عبوة",17]]
+  },
+  {
+    id:"tea_blue", section:"tea", cls:"tea", badge:"شاي",
+    name:"شاي تعليقة أزرق",
+    desc:"نسخة محسنة من شاي التعليقة بمذاق أقوى وتجربة أكثر تميزاً.",
+    img:"https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?auto=format&fit=crop&w=900&q=80",
+    variants:[["عبوة",17]]
+  },
+  {
+    id:"tea_special", section:"tea", cls:"tea", badge:"شاي",
+    name:"شاي تلقيمة سبيشل",
+    desc:"شاي مختار بعناية من أوراق عالية الجودة بطعم غني ورائحة مميزة.",
+    img:"https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=900&q=80",
+    variants:[["عبوة",30]]
+  },
+  {
+    id:"tea_aseel", section:"tea", cls:"tea", badge:"شاي",
+    name:"شاي تلقيمة أصيل",
+    desc:"شاي فاخر بنكهة أصيلة ومذاق متوازن لمحبي الشاي التقليدي.",
+    img:"https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=900&q=80",
+    variants:[["عبوة",30]]
+  },
+  {
+    id:"iraqi_tea", section:"tea", cls:"tea", badge:"شاي",
+    name:"شاي عراقي نخب أول",
+    desc:"شاي عراقي فاخر بنكهة قوية ولون غني مناسب لمحبي الشاي الثقيل.",
+    img:"https://images.unsplash.com/photo-1547825407-2d060104b7f8?auto=format&fit=crop&w=900&q=80",
+    variants:[["عبوة",20]]
+  }
+];
+
+const cart = {};
+
+function variantId(product, label){ return `${product.id}_${label.replaceAll(" ","_")}`; }
+
+function renderProducts(){
+  ["coffee","batrina","tea"].forEach(sec => document.getElementById(sec).innerHTML = "");
+  products.forEach(p=>{
+    const card = document.createElement("div");
+    card.className = `card ${p.cls}`;
+    card.innerHTML = `
+      <div class="imagebox">
+        <span class="badge">${p.badge}</span>
+        <img src="${p.img}" alt="${p.name}" loading="lazy">
+      </div>
+      <div class="body">
+        <h3>${p.name}</h3>
+        <p class="desc">${p.desc}</p>
+        ${p.variants.map(v=>{
+          const id = variantId(p,v[0]);
+          return `
+            <div class="variant">
+              <div><strong>${v[0]}</strong><br><span class="price">${v[1]} درهم</span></div>
+              <div class="qty">
+                <button onclick="changeQty('${id}', '${p.name}', '${v[0]}', ${v[1]}, -1)">−</button>
+                <span id="qty-${id}">${cart[id]?.qty || 0}</span>
+                <button onclick="changeQty('${id}', '${p.name}', '${v[0]}', ${v[1]}, 1)">+</button>
+              </div>
+            </div>`;
+        }).join("")}
+      </div>`;
+    document.getElementById(p.section).appendChild(card);
+  });
+}
+
+function changeQty(id, name, variant, price, delta){
+  if(!cart[id]) cart[id] = {id,name,variant,price,qty:0};
+  cart[id].qty = Math.max(0, cart[id].qty + delta);
+  if(cart[id].qty === 0) delete cart[id];
+  renderProducts();
+  renderCart();
+}
+
+function getItems(){ return Object.values(cart); }
+
+function renderCart(){
+  const box = document.getElementById("cartItems");
+  const items = getItems();
+  box.innerHTML = items.length ? "" : `<div class="empty">لم يتم اختيار منتجات بعد.</div>`;
+  items.forEach(i=>{
+    const row = document.createElement("div");
+    row.className = "cart-row";
+    row.innerHTML = `
+      <div><strong>${i.name}</strong><br><span>${i.variant} × ${i.qty}</span></div>
+      <strong>${i.price * i.qty} درهم</strong>
+      <button class="remove" onclick="delete cart['${i.id}']; renderProducts(); renderCart();">×</button>`;
+    box.appendChild(row);
+  });
+  const total = items.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById("total").textContent = `${total} درهم`;
+  document.getElementById("mobileTotal").textContent = `${total} درهم`;
+  document.getElementById("orderBtn").disabled = total === 0;
+}
+
+function proceedToWhatsApp(){
+  const items = getItems();
+  const name = document.getElementById("customerName").value.trim();
+  const address = document.getElementById("customerAddress").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
+  const notes = document.getElementById("customerNotes").value.trim();
+  const error = document.getElementById("errorBox");
+  const errors = [];
+
+  if(!items.length) errors.push("يرجى اختيار منتج واحد على الأقل.");
+  if(!name) errors.push("الاسم الكامل مطلوب.");
+  if(!address) errors.push("العنوان بالتفصيل مطلوب.");
+  if(!phone) errors.push("رقم الهاتف مطلوب.");
+
+  if(errors.length){
+    error.innerHTML = errors.join("<br>");
+    error.style.display = "block";
+    return;
+  }
+  error.style.display = "none";
+
+  const lines = items.map(i=>`- ${i.name} | ${i.variant} | Qty: ${i.qty} | Unit Price: ${i.price} AED`);
+  const total = items.reduce((s,i)=>s+i.price*i.qty,0);
+
+  const message = `NEW_BUASKOOR_ORDER
+
+Store: متجر بوعسكور
+
+Customer Name: ${name}
+Phone: ${phone}
+Address: ${address}
+Notes: ${notes || "لا توجد"}
+
+Items:
+${lines.join("\n")}
+
+Total: ${total} AED`;
+
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,"_blank");
+}
+
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>
