@@ -95,6 +95,51 @@ Handles product and variation mapping, shipping calculation, WooCommerce order p
 Handles new-order triggers, order retrieval, customer and delivery formatting, and Telegram operations alerts.
 
 ---
+# 📸 Screenshots
+
+## 🏪 Store Front
+
+![Store Front](images/store-home.png)
+
+---
+
+## 🛒 Checkout Experience
+
+![Checkout](images/checkout.png)
+
+---
+
+## 🤖 AI Sales Agent Workflow
+
+![AI Sales Agent](images/ai-agent-workflow.png)
+
+---
+
+## 🛍️ WooCommerce Order Creation
+
+![WooCommerce Order](images/woocommerce-order-workflow.png)
+
+---
+
+## 📩 Telegram Notification Workflow
+
+![Telegram Workflow](images/telegram-notification-workflow.png)
+
+---
+
+## 💬 Customer WhatsApp Journey
+
+Customer receives automated order confirmation and completion messages.
+
+![Customer WhatsApp](images/customer-whatsapp.png)
+
+---
+
+## 🧑‍💼 Admin Order Notification
+
+Automatic order notification sent to the store administrator.
+
+![Admin Notification](images/admin-whatsapp-notification.png)
 
 ## Repository Structure
 
