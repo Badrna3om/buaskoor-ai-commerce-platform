@@ -18,6 +18,23 @@ The platform connects an interactive product menu, a WhatsApp AI sales assistant
 
 > This repository contains a sanitized public portfolio version. Credentials, customer data, private infrastructure identifiers, and production secrets have been removed.
 
+## Business Problem
+
+Conversational commerce becomes difficult to scale when product questions, cart changes, delivery rules, customer details, and order creation are handled manually across WhatsApp and an online store. The result is repetitive work, inconsistent responses, and avoidable order-entry errors.
+
+## Solution and Business Value
+
+This platform turns WhatsApp conversations into a structured commerce journey while keeping WooCommerce as the order system of record.
+
+- Guides customers from product discovery to confirmation
+- Applies product, pricing, delivery, and eligibility rules consistently
+- Reduces repetitive sales and support responses
+- Creates WooCommerce orders without duplicate manual entry
+- Preserves session context across multi-step conversations
+- Escalates customers to a human when required
+- Notifies operations automatically after order creation
+
+
 ---
 
 ## Main Capabilities
@@ -61,7 +78,20 @@ The platform connects an interactive product menu, a WhatsApp AI sales assistant
 
 ---
 
+## Engineering Highlights
+
+- Arabic-first conversational flow with structured intent and order extraction
+- Persistent session and cart state across multiple customer messages
+- Product and variation mapping before WooCommerce order creation
+- Duplicate-message protection for WhatsApp webhook retries
+- Country, shipping, and special-area pricing rules
+- Modular workflows for sales, order creation, and operations notifications
+- Sanitized public exports with credentials and private identifiers removed
+
+---
+
 ## Technology Stack
+
 
 - **Automation:** n8n
 - **AI:** OpenAI GPT models
