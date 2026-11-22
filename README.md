@@ -1,12 +1,25 @@
+<p align="center"><strong>BADRELDIN — PRODUCTION AI PORTFOLIO</strong><br/><a href="https://github.com/Badrna3om">Profile</a> · <a href="https://github.com/Badrna3om/tactic-ai-media-platform">TACTIC / AMER</a> · <a href="https://github.com/Badrna3om/buaskoor-ai-commerce-platform">Commerce</a> · <a href="https://github.com/Badrna3om/ai-restaurant-operating-system">Restaurant</a> · <a href="https://github.com/Badrna3om/ai-content-automation-for-e-commerce">Marketing</a></p>
+
 <div align="center">
 
 # 🛒 Buaskoor AI Commerce Platform
 
 ### AI Sales Agent • Interactive Storefront • WooCommerce Automation • Operations Notifications
 
-A functional e-commerce automation portfolio project built with **n8n, OpenAI, WhatsApp, WooCommerce, JavaScript, and Telegram**.
+A real-world WooCommerce + WhatsApp commerce automation system for the BUASKOOR store. **This repository documents a sanitized public subset** of its customer journey, order integrations and operational handoffs.
 
 </div>
+
+---
+
+## Portfolio quick view
+
+**BUASKOOR · Conversational Commerce**  
+[Store preview](images/store-home.png) · [Customer journey](images/customer-whatsapp.png)
+
+**What this proves:** customer-intent handling, cart/session state, commerce API integration and reliable order handoff.
+
+> **Disclosure:** The repository is for public technical review. Operating credentials, private infrastructure, customer data and confidential business logic are excluded.
 
 ---
 
@@ -189,9 +202,9 @@ Buaskoor-AI-Commerce-Platform/
 
 ## Project Status
 
-**Functional prototype / portfolio case study**
+**Public portfolio snapshot of a real-world commerce implementation.**
 
-The workflows represent a real commerce automation implementation. Production deployment should add stronger credential isolation, authenticated operations interfaces, monitoring, backups, and formal data-retention policies.
+The operating storefront and integrations are managed separately. These sanitized exports/screenshots are intended for engineering review, not direct production import. Any independent deployment needs protected credentials, authenticated interfaces, monitoring, backups and data-retention controls.
 
 ---
 
