@@ -2,13 +2,43 @@
 
 <div align="center">
 
-# 🛒 Buaskoor AI Commerce Platform
+![BUASKOOR — AI Commerce Platform](assets/portfolio-hero.svg)
 
-### AI Sales Agent • Interactive Storefront • WooCommerce Automation • Operations Notifications
+### Arabic-first AI sales, session management, WooCommerce integration and operational handoff
 
-A real-world WooCommerce + WhatsApp commerce automation system for the BUASKOOR store. **This repository documents a sanitized public subset** of its customer journey, order integrations and operational handoffs.
+**Public, sanitized portfolio snapshot of a real-world commerce implementation.** Not a live customer account, not a turnkey deployment.
+
+[**Customer journey**](#customer-journey) · [**Engineering decisions**](#engineering-highlights) · [**Source workflows**](#included-workflows) · [**Portfolio**](https://github.com/Badrna3om)
 
 </div>
+
+## See the system in action
+
+<table>
+<tr>
+<td align="center" width="33%"><img src="images/store-home.png" alt="Storefront screenshot" width="250"/><br/><b>01 · Explore the catalog</b></td>
+<td align="center" width="33%"><img src="images/customer-whatsapp.png" alt="Example WhatsApp customer order journey" width="250"/><br/><b>02 · Conversational ordering</b></td>
+<td align="center" width="33%"><img src="images/checkout.png" alt="Checkout screenshot" width="250"/><br/><b>03 · Order confirmation</b></td>
+</tr>
+</table>
+
+*These are existing portfolio screenshots. They demonstrate interfaces and workflow stages; they do not provide independently verified sales, conversion rates, or time-saved metrics.*
+
+### Customer-to-operations handoff
+
+```mermaid
+flowchart LR
+  A["Storefront / WhatsApp"] --> B["Identify intent & session"]
+  B --> C["Build and validate cart"]
+  C --> D["Confirm address & delivery"]
+  D --> E["WooCommerce order API"]
+  E --> F["Notify operations"]
+  B --> G["Human support when needed"]
+```
+
+**Engineering proof:** three public sanitized n8n workflow exports; a product/menu storefront; explicit message deduplication, state handling, product/variation mapping and notification logic.
+
+**Review the actual assets:** [Sales agent workflow](images/ai-agent-workflow.png) · [WooCommerce order creation](images/woocommerce-order-workflow.png) · [Operations notification](images/telegram-notification-workflow.png).
 
 ---
 
