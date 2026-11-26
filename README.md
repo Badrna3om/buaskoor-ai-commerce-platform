@@ -8,7 +8,7 @@
 
 **Public, sanitized portfolio snapshot of a real-world commerce implementation.** Not a live customer account, not a turnkey deployment.
 
-[**Customer journey**](#customer-journey) · [**Engineering decisions**](#engineering-highlights) · [**Source workflows**](#included-workflows) · [**Portfolio**](https://github.com/Badrna3om)
+[**Case study and evidence**](docs/PORTFOLIO_CASE_STUDY.md) · [**Customer journey**](#customer-journey) · [**Engineering decisions**](#engineering-highlights) · [**Source workflows**](#included-workflows) · [**Portfolio**](https://github.com/Badrna3om)
 
 </div>
 
